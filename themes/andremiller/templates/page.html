@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block html_lang %}{{ page.lang }}{% endblock %}
+
+{% block title %}{{ SITENAME|striptags }} - {{ page.title|striptags }}{%endblock%}
+
+{% block head %}
+  {{ super() }}
+
+  {% import 'translations.html' as translations with context %}
+  {% if translations.entry_hreflang(page) %}
+    {{ translations.entry_hreflang(page) }}
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  <article>
+    <header class="mb-4">
+      <h1 class="display-4 fw-bold">{{ page.title }}</h1>
+
+      {% import 'translations.html' as translations with context %}
+      {{ translations.translations_for(page) }}
+
+      {% if page.modified %}
+        <p class="text-muted">
+          <i class="bi bi-pencil"></i> Last updated: {{ page.locale_modified }}
+        </p>
+      {% endif %}
+
+      <hr>
+    </header>
+
+    <div class="page-content">
+      {{ page.content }}
+    </div>
+  </article>
+{% endblock %}

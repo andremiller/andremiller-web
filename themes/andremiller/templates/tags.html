@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}{{ SITENAME|striptags }} - Tags{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col">
+      <h1 class="display-5 fw-bold mb-4">Tags</h1>
+
+      <div class="d-flex flex-wrap gap-2">
+        {% for tag, articles in tags|sort %}
+          <a href="{{ SITEURL }}/{{ tag.url }}" class="btn btn-outline-secondary">
+            {{ tag }} <span class="badge bg-secondary">{{ articles|count }}</span>
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

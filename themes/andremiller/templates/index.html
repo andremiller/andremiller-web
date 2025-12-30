@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <!-- Page Subtitle -->
+  <div class="row mb-4">
+    <div class="col">
+      {% block content_title %}
+        <p class="text-muted">Thoughts, projects, and experiments</p>
+      {% endblock %}
+    </div>
+  </div>
+
+  <!-- Articles Grid -->
+  <div class="row g-4">
+    {% for article in articles_page.object_list %}
+      <div class="col-md-6 col-lg-4">
+        <article class="card h-100 shadow-sm">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">
+              <a href="{{ SITEURL }}/{{ article.url }}"
+                 class="text-decoration-none stretched-link"
+                 rel="bookmark"
+                 title="Permalink to {{ article.title|striptags }}">
+                {{ article.title }}
+              </a>
+            </h5>
+
+            <div class="card-text text-muted small mb-3">
+              <time datetime="{{ article.date.isoformat() }}">
+                <i class="bi bi-calendar3"></i> {{ article.locale_date }}
+              </time>
+            </div>
+
+            <div class="card-text mb-3 flex-grow-1">
+              {{ article.summary }}
+            </div>
+
+            {% if article.tags %}
+              <div class="mt-auto">
+                {% for tag in article.tags[:3] %}
+                  <span class="badge bg-secondary me-1">{{ tag }}</span>
+                {% endfor %}
+                {% if article.tags|length > 3 %}
+                  <span class="badge bg-secondary">+{{ article.tags|length - 3 }}</span>
+                {% endif %}
+              </div>
+            {% endif %}
+          </div>
+        </article>
+      </div>
+    {% endfor %}
+  </div>
+
+  <!-- Pagination -->
+  {% if articles_page.has_other_pages() %}
+    <div class="row mt-5">
+      <div class="col">
+        {% include 'pagination.html' %}
+      </div>
+    </div>
+  {% endif %}
+
+{% endblock content %}

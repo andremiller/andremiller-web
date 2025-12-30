@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}{{ SITENAME|striptags }} - Archives{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col">
+      <h1 class="display-5 fw-bold mb-4">Archives</h1>
+
+      <div class="list-group">
+        {% for article in dates %}
+          <a href="{{ SITEURL }}/{{ article.url }}" class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between align-items-center">
+              <h5 class="mb-1">{{ article.title }}</h5>
+              <small class="text-muted">
+                <i class="bi bi-calendar3"></i> {{ article.locale_date }}
+              </small>
+            </div>
+            {% if article.summary %}
+              <p class="mb-1 text-muted">{{ article.summary|striptags|truncate(150) }}</p>
+            {% endif %}
+            {% if article.category %}
+              <small class="text-muted">
+                <i class="bi bi-folder"></i> {{ article.category }}
+              </small>
+            {% endif %}
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

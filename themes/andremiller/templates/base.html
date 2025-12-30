@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="{% block html_lang %}{{ DEFAULT_LANG }}{% endblock html_lang %}">
+  <head>
+    {% block head %}
+      <title>{% block title %}{{ SITENAME|striptags }}{% endblock title %}</title>
+      <meta charset="utf-8" />
+      <meta name="generator" content="Pelican" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      {% if SITESUBTITLE %}
+        <meta name="description" content="{{ SITESUBTITLE }}" />
+      {% endif %}
+
+      <!-- Bootstrap 5.3 CSS -->
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+      <!-- Bootstrap Icons -->
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="{{ SITEURL }}/{{ THEME_STATIC_DIR }}/css/custom.css">
+
+      {% if STYLESHEET_URL %}
+        <link rel="stylesheet" type="text/css" href="{{ STYLESHEET_URL }}" />
+      {% endif %}
+      {% if FEED_ALL_ATOM %}
+        <link href="{{ FEED_DOMAIN }}/{% if FEED_ALL_ATOM_URL %}{{ FEED_ALL_ATOM_URL }}{% else %}{{ FEED_ALL_ATOM }}{% endif %}" type="application/atom+xml" rel="alternate" title="{{ SITENAME|striptags }} Full Atom Feed" />
+      {% endif %}
+      {% if FEED_ALL_RSS %}
+        <link href="{{ FEED_DOMAIN }}/{% if FEED_ALL_RSS_URL %}{{ FEED_ALL_RSS_URL }}{% else %}{{ FEED_ALL_RSS }}{% endif %}" type="application/rss+xml" rel="alternate" title="{{ SITENAME|striptags }} Full RSS Feed" />
+      {% endif %}
+      {% if FEED_ATOM %}
+        <link href="{{ FEED_DOMAIN }}/{%if FEED_ATOM_URL %}{{ FEED_ATOM_URL }}{% else %}{{ FEED_ATOM }}{% endif %}" type="application/atom+xml" rel="alternate" title="{{ SITENAME|striptags }} Atom Feed" />
+      {% endif %}
+      {% if FEED_RSS %}
+        <link href="{{ FEED_DOMAIN }}/{% if FEED_RSS_URL %}{{ FEED_RSS_URL }}{% else %}{{ FEED_RSS }}{% endif %}" type="application/rss+xml" rel="alternate" title="{{ SITENAME|striptags }} RSS Feed" />
+      {% endif %}
+      {% if CATEGORY_FEED_ATOM and category %}
+        <link href="{{ FEED_DOMAIN }}/{% if CATEGORY_FEED_ATOM_URL %}{{ CATEGORY_FEED_ATOM_URL.format(slug=category.slug) }}{% else %}{{ CATEGORY_FEED_ATOM.format(slug=category.slug) }}{% endif %}" type="application/atom+xml" rel="alternate" title="{{ SITENAME|striptags }} Categories Atom Feed" />
+      {% endif %}
+      {% if CATEGORY_FEED_RSS and category %}
+        <link href="{{ FEED_DOMAIN }}/{% if CATEGORY_FEED_RSS_URL %}{{ CATEGORY_FEED_RSS_URL.format(slug=category.slug) }}{% else %}{{ CATEGORY_FEED_RSS.format(slug=category.slug) }}{% endif %}" type="application/rss+xml" rel="alternate" title="{{ SITENAME|striptags }} Categories RSS Feed" />
+      {% endif %}
+      {% if TAG_FEED_ATOM and tag %}
+        <link href="{{ FEED_DOMAIN }}/{% if TAG_FEED_ATOM_URL %}{{ TAG_FEED_ATOM_URL.format(slug=tag.slug) }}{% else %}{{ TAG_FEED_ATOM.format(slug=tag.slug) }}{% endif %}" type="application/atom+xml" rel="alternate" title="{{ SITENAME|striptags }} Tags Atom Feed" />
+      {% endif %}
+      {% if TAG_FEED_RSS and tag %}
+        <link href="{{ FEED_DOMAIN }}/{% if TAG_FEED_RSS_URL %}{{ TAG_FEED_RSS_URL.format(slug=tag.slug) }}{% else %}{{ TAG_FEED_RSS.format(slug=tag.slug) }}{% endif %}" type="application/rss+xml" rel="alternate" title="{{ SITENAME|striptags }} Tags RSS Feed" />
+      {% endif %}
+
+      <!-- Dark mode initialization (must be in head to prevent flash) -->
+      <script>
+        (function() {
+          const getPreferredTheme = () => {
+            const storedTheme = localStorage.getItem('theme');
+            if (storedTheme) {
+              return storedTheme;
+            }
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          };
+
+          const setTheme = (theme) => {
+            document.documentElement.setAttribute('data-bs-theme', theme);
+          };
+
+          setTheme(getPreferredTheme());
+        })();
+      </script>
+    {% endblock head %}
+  </head>
+
+  <body>
+    {% block body %}
+      <!-- Navbar -->
+      <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top border-bottom">
+        <div class="container">
+          <!-- Brand -->
+          <a class="navbar-brand fw-bold" href="{{ SITEURL }}/">
+            {{ SITENAME }}
+          </a>
+
+          <!-- Mobile toggle -->
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <!-- Nav items -->
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+              {% for title, link in MENUITEMS %}
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ link }}">{{ title }}</a>
+                </li>
+              {% endfor %}
+
+              {% if DISPLAY_PAGES_ON_MENU %}
+                {% for p in pages %}
+                  <li class="nav-item">
+                    <a class="nav-link {% if p==page %}active{% endif %}"
+                       href="{{ SITEURL }}/{{ p.url }}"
+                       {% if p==page %}aria-current="page"{% endif %}>
+                      {{ p.title }}
+                    </a>
+                  </li>
+                {% endfor %}
+              {% endif %}
+
+              {% if DISPLAY_CATEGORIES_ON_MENU %}
+                {% for cat, null in categories %}
+                  <li class="nav-item">
+                    <a class="nav-link {% if cat==category %}active{% endif %}"
+                       href="{{ SITEURL }}/{{ cat.url }}"
+                       {% if cat==category %}aria-current="page"{% endif %}>
+                      {{ cat }}
+                    </a>
+                  </li>
+                {% endfor %}
+              {% endif %}
+            </ul>
+
+            <!-- Right-side nav items -->
+            <ul class="navbar-nav">
+              <!-- Dark/Light mode toggle -->
+              <li class="nav-item">
+                <button class="btn nav-link" id="theme-toggle" aria-label="Toggle dark/light mode">
+                  <i class="bi bi-sun-fill" id="theme-icon-light"></i>
+                  <i class="bi bi-moon-fill d-none" id="theme-icon-dark"></i>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Main Content -->
+      <main class="py-4">
+        <div class="container">
+          {% block content %}
+          {% endblock content %}
+        </div>
+      </main>
+
+      <!-- Footer -->
+      <footer class="bg-body-tertiary border-top mt-5">
+        <div class="container py-4">
+          {% block footer %}
+            {% if SOCIAL %}
+            <div class="row mb-3">
+              <div class="col">
+                <div class="d-flex flex-wrap gap-2">
+                  {% for name, link in SOCIAL %}
+                    <a href="{{ link }}" class="btn btn-outline-secondary btn-sm" target="_blank" rel="noopener">
+                      {{ name }}
+                    </a>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+            {% endif %}
+
+            <div class="row">
+              <div class="col">
+                <p class="text-muted small mb-0">
+                  &copy; 2025 Andre Miller / ZS1XOR
+                </p>
+              </div>
+            </div>
+          {% endblock footer %}
+        </div>
+      </footer>
+
+      <!-- Bootstrap JS Bundle (includes Popper) -->
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+
+      <!-- Dark mode toggle script -->
+      <script src="{{ SITEURL }}/{{ THEME_STATIC_DIR }}/js/theme-toggle.js"></script>
+    {% endblock body %}
+  </body>
+</html>
